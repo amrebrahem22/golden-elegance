@@ -1,13 +1,8 @@
 .post {
-  width: 60%;
-  margin: auto;
   border-radius: 3px;
   border: 1px solid rgba(var(--b6a, 219, 219, 219), 1);
   margin-bottom: 60px;
   background: #fff;
-}
-.post:first-of-type {
-  margin-top: 40px;
 }
 .post__header {
   display: flex;
