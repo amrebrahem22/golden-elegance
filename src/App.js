@@ -182,7 +182,7 @@ function App() {
         <Grid container spacing={2}>
           <Grid item xs={8}>
             {posts.map(({ id, post }) => (
-              <Post key={id} {...post} />
+              <Post user={user} postId={id} key={id} {...post} />
             ))}
           </Grid>
             <Grid item xs={4}></Grid>
