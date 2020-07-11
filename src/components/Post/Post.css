@@ -28,9 +28,13 @@
   margin-right: 10px;
 }
 .post__image {
-  object-fit: cover;
-  height: 700px;
-  width: 100%;
+  object-fit: contain;
+    height: auto;
+    width: 100%;
+}
+
+.post__text {
+  padding: 16px;
 }
 
 h4 {
