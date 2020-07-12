@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
+from django.db.models.signals import post_save
 
 # Validators
 
@@ -123,3 +124,33 @@ class User(AbstractBaseUser):
     def is_active(self):
         "Is the user active?"
         return self.active
+
+# - user (username, email, password)
+#         - first_name = models.CharField(max_length=255)
+#         - last_name = models.CharField(max_length=255)
+#         - avatar = models.ImageField(blank=True, null=True)
+#         - description
+#         - verified
+#         - following
+#         - date_join
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    avatar = models.ImageField(blank=True, null=True)
+    description = models.TextField()
+    verified = models.BooleanField(default=False)
+    following = models.ManyToManyField(User, related_name='followers', blank=True)
+    date_join = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '{} - {}'.format(self.user.username, self.following.all().count())
+
+
+def post_save_create_profile(sender, instance, created, *args, **kwargs):
+    if created:
+        user = Profile.objects.create(user=instance)
+        user.save()
+
+post_save.connect(post_save_create_profile, sender=User)
