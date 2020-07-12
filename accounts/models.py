@@ -6,8 +6,6 @@ from django.contrib.auth.models import (
 )
 from django.db.models.signals import post_save
 
-# Validators
-
 
 def username_validation(value):
     if ' ' in value:
@@ -125,14 +123,27 @@ class User(AbstractBaseUser):
         "Is the user active?"
         return self.active
 
-# - user (username, email, password)
-#         - first_name = models.CharField(max_length=255)
-#         - last_name = models.CharField(max_length=255)
-#         - avatar = models.ImageField(blank=True, null=True)
-#         - description
-#         - verified
-#         - following
-#         - date_join
+
+class UserProfileManager(models.Manager):
+	use_for_related_fields = True
+
+	def all(self):
+		qs = self.get_queryset().all()
+		try:
+			if self.instance:
+				qs = qs.exclude(user=self.instance)
+		except:
+			pass
+		return qs
+
+	def count(self):
+		qs = self.get_queryset().all()
+		try:
+			if self.instance:
+				qs = qs.exclude(user=self.instance)
+		except:
+			pass
+		return qs.count()
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
@@ -144,8 +155,14 @@ class Profile(models.Model):
     following = models.ManyToManyField(User, related_name='followers', blank=True)
     date_join = models.DateTimeField(auto_now_add=True)
 
+    objects = UserProfileManager()
+    
     def __str__(self):
         return '{} - {}'.format(self.user.username, self.following.all().count())
+
+    def get_following(self):
+        qs = self.following.all()
+        return qs.exclude(username=self.user.username)
 
 
 def post_save_create_profile(sender, instance, created, *args, **kwargs):
