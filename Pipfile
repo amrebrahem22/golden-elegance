@@ -12,6 +12,9 @@ django = "*"
 djangorestframework = "*"
 pillow = "*"
 django-decouple = "*"
+django-video-encoding = "*"
+django-rest-auth = "*"
+django-allauth = "*"
 
 [requires]
 python_version = "3.7"

@@ -125,38 +125,41 @@ class User(AbstractBaseUser):
 
 
 class UserProfileManager(models.Manager):
-	use_for_related_fields = True
+    use_for_related_fields = True
 
-	def all(self):
-		qs = self.get_queryset().all()
-		try:
-			if self.instance:
-				qs = qs.exclude(user=self.instance)
-		except:
-			pass
-		return qs
+    def all(self):
+        qs = self.get_queryset().all()
+        try:
+            if self.instance:
+                qs = qs.exclude(user=self.instance)
+        except:
+            pass
+        return qs
 
-	def count(self):
-		qs = self.get_queryset().all()
-		try:
-			if self.instance:
-				qs = qs.exclude(user=self.instance)
-		except:
-			pass
-		return qs.count()
+    def count(self):
+        qs = self.get_queryset().all()
+        try:
+            if self.instance:
+                qs = qs.exclude(user=self.instance)
+        except:
+            pass
+        return qs.count()
+
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="profile", default=1)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     avatar = models.ImageField(blank=True, null=True)
     description = models.TextField()
     verified = models.BooleanField(default=False)
-    following = models.ManyToManyField(User, related_name='followers', blank=True)
+    following = models.ManyToManyField(
+        User, related_name='followers', blank=True)
     date_join = models.DateTimeField(auto_now_add=True)
 
     objects = UserProfileManager()
-    
+
     def __str__(self):
         return '{} - {}'.format(self.user.username, self.following.all().count())
 
@@ -164,10 +167,15 @@ class Profile(models.Model):
         qs = self.following.all()
         return qs.exclude(username=self.user.username)
 
+    def get_followers(self):
+        qs = self.user.followers.all()
+        return qs.exclude(user=self.user)
+
 
 def post_save_create_profile(sender, instance, created, *args, **kwargs):
     if created:
         user = Profile.objects.create(user=instance)
         user.save()
+
 
 post_save.connect(post_save_create_profile, sender=User)
