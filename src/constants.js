@@ -1,8 +1,8 @@
 export const endpoint = 'http://127.0.0.1:8000/api';
 export const authEndpoint = 'http://127.0.0.1:8000';
 
-export const authLogin = `${authEndpoint}/auth/`;
-export const authRegister = `${authEndpoint}/auth/registration/`;
+export const authLoginURL = `${authEndpoint}/auth/`;
+export const authRegisterURL = `${authEndpoint}/auth/registration/`;
 
 export const accountsList = `${endpoint}/accounts/`;
 export const accountCreate = `${endpoint}/create/`;
