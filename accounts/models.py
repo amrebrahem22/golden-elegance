@@ -145,12 +145,30 @@ class UserProfileManager(models.Manager):
             pass
         return qs.count()
 
+    # toggle Follow
+    def toggle_follow(self, user, to_follow):
+        user_profile, created = Profile.objects.get_or_create(user=user)
+        if to_follow in user_profile.following.all():
+            user_profile.following.remove(to_follow)
+            added = False
+        else:
+            user_profile.following.add(to_follow)
+            added = True
+        return added
+
+    # Is Following
+    def is_following(self, user, user_following):
+        user_profile, created = Profile.objects.get_or_create(user=user)
+        if user_following in user_profile.following.all() or created:
+            return True
+        return False
+
 
 class Profile(models.Model):
     user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="profile", default=1)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255, blank=True, null=True)
+    last_name = models.CharField(max_length=255, blank=True, null=True)
     avatar = models.ImageField(blank=True, null=True)
     description = models.TextField()
     verified = models.BooleanField(default=False)

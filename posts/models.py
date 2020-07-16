@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models.signals import post_save, pre_save
+from django.contrib.contenttypes.models import ContentType
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from comments.models import Comment
@@ -50,8 +51,11 @@ class Post(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['-timestamp']
+
     def __str__(self):
-        return self.user.username
+        return '{} - {}'.format(self.user.username, self.slug)
 
     # get the post comments
     @property

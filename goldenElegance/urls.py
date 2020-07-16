@@ -8,6 +8,8 @@ urlpatterns = [
     path('auth/', include('rest_auth.urls')),
     path('auth/registration/', include('rest_auth.registration.urls')),
     path('api/', include('accounts.api.urls'), name="api"),
+    path('api/posts/', include('posts.api.urls'), name="posts-api"),
+    path('api/comments/', include('comments.api.urls'), name="comments-api"),
 ]
 
 if settings.DEBUG:
