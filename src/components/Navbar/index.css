@@ -1,0 +1,14 @@
+.app__header {
+  background: #fff;
+  padding: 10px 20px;
+  border-bottom: 1px solid lightgrey;
+}
+
+.app_headerGrid {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.app_headerGrid img {
+  object-fit: contain;
+}

@@ -13,10 +13,11 @@ export const authStart = () => {
   };
 };
 
-export const authSuccess = (token) => {
+export const authSuccess = (token, authenticatedUser) => {
   return {
     type: AUTH_SUCCESS,
     token,
+    authenticatedUser
   };
 };
 
@@ -29,6 +30,7 @@ export const authFail = (error) => {
 
 export const logout = () => {
   localStorage.removeItem("token");
+  localStorage.removeItem("authenticatedUser");
   localStorage.removeItem("expirationDate");
   return {
     type: AUTH_LOGOUT,
@@ -55,23 +57,24 @@ export const authLogin = (email, password) => {
         const token = res.data.key;
         const expirationDate = new Date(new Date().getTime() + 3600 * 1000);
         localStorage.setItem("token", token);
+        localStorage.setItem("authenticatedUser", res.data.user);
         localStorage.setItem("expirationDate", expirationDate);
 
-        dispatch(authSuccess(token));
+        dispatch(authSuccess(token, res.data.user));
         dispatch(checkAuthTimeout(3600));
       })
       .catch((err) => dispatch(authFail(err)));
   };
 };
 
-export const authSignup = (username, email, password, password2) => {
+export const authSignup = (username, email, password1, password2) => {
   return (dispatch) => {
     dispatch(authStart());
     axios
       .post(authRegisterURL, {
         username,
         email,
-        password,
+        password1,
         password2,
       })
       .then((res) => {
@@ -80,7 +83,7 @@ export const authSignup = (username, email, password, password2) => {
         localStorage.setItem("token", token);
         localStorage.setItem("expirationDate", expirationDate);
 
-        dispatch(authSuccess(token));
+        dispatch(authLogin(email, password1));
         dispatch(checkAuthTimeout(3600));
       })
       .catch((err) => dispatch(authFail(err)));

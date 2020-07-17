@@ -1,0 +1,8 @@
+.app {
+  background: #fafafa;
+}
+
+.post__form {
+  display: flex;
+  flex-direction: column;
+}

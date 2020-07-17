@@ -1,20 +1,3 @@
 * {
   margin: 0;
 }
-
-.app {
-  background: #fafafa;
-}
-
-.app__header {
-  background: #fff;
-  padding: 20px;
-  object-fit: contain;
-  border-bottom: 1px solid lightgrey;
-  margin-bottom: 40px;
-}
-
-.post__form {
-  display: flex;
-  flex-direction: column;
-}

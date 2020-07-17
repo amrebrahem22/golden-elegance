@@ -2,7 +2,8 @@ import { updatedState } from "../utils";
 import * as ActionTypes from "../actions/actionTypes";
 
 const initialState = {
-  token: null,
+  token: localStorage.getItem('token') ? localStorage.getItem('token') : null,
+  authenticatedUser: localStorage.getItem('authenticatedUser') ? localStorage.getItem('authenticatedUser') : null,
   loading: false,
   error: null,
 };
@@ -14,6 +15,7 @@ const stateAuthStart = (state = initialState, action) => {
 const stateAuthSuccess = (state = initialState, action) => {
   return updatedState(state, {
     token: action.token,
+    authenticatedUser: action.authenticatedUser,
     loading: false,
     error: null,
   });
@@ -22,13 +24,14 @@ const stateAuthSuccess = (state = initialState, action) => {
 const stateAuthFail = (state = initialState, action) => {
   return updatedState(state, {
     token: null,
+    authenticatedUser: null,
     loading: false,
     error: action.error,
   });
 };
 
 const stateAuthLogout = (state = initialState, action) => {
-  return updatedState(state, { token: null, loading: false, error: null });
+  return updatedState(state, { token: null, authenticatedUser: null, loading: false, error: null });
 };
 
 const authReducer = (state = initialState, action) => {

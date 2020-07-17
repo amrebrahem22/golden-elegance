@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 
 from accounts.models import User, Profile
 
@@ -25,6 +26,14 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_followers(self, obj):
         return ProfileSerializer(obj.get_followers(), many=True).data
+
+
+class AccountUserDataSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer()
+
+    class Meta:
+        model = User
+        fields = ['id', 'email', 'username', 'active', 'profile']
 
 
 class ProfileLessDataSerializer(serializers.ModelSerializer):
@@ -110,3 +119,15 @@ class AccountUserLessCreateSerializer(serializers.ModelSerializer):
         p.description = description
         p.save()
         return User.objects.get(id=user.id)
+
+
+class TokenSerializer(serializers.ModelSerializer):
+    """
+    Serializer for Token model.
+    """
+    user = AccountUserDataSerializer(
+        many=False, read_only=True)  # this is add by myself.
+
+    class Meta:
+        model = Token
+        fields = ('key', 'user')
