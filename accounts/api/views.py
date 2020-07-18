@@ -2,11 +2,11 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
 
-from .serializers import AccountSerializer, ProfileCreateSerializer, AccountUserLessCreateSerializer
+from .serializers import AccountSerializer, ProfileCreateSerializer, AccountUserLessCreateSerializer, AccountUserDataSerializer
 from accounts.models import Profile
 
 User = get_user_model()
@@ -14,8 +14,9 @@ User = get_user_model()
 
 class AccountDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
-    serializer_class = AccountSerializer
-    permission_classes = [IsAuthenticated]
+    serializer_class = AccountUserDataSerializer
+    permission_classes = [AllowAny]
+    lookup_field = 'username'
 
 
 class AccountsCraeteView(generics.CreateAPIView):
@@ -28,6 +29,7 @@ class AccountsUpdateView(generics.UpdateAPIView):
     queryset = User.objects.all()
     serializer_class = AccountUserLessCreateSerializer
     permission_classes = [IsAuthenticated]
+    lookup_field = 'username'
 
 
 class AccountsDeleteView(generics.DestroyAPIView):

@@ -6,9 +6,9 @@ export const authRegisterURL = `${authEndpoint}/auth/registration/`;
 
 export const accountsList = `${endpoint}/accounts/`;
 export const accountCreate = `${endpoint}/create/`;
-export const accountDetail = (id) => `${endpoint}/account/${id}/`;
-export const accountDelete = (id) => `${endpoint}/account/${id}/delete/`;
-export const accountUpdate = (id) => `${endpoint}/account/${id}/updare/`;
+export const accountDetail = (username) => `${endpoint}/account/${username}/`;
+export const accountDelete = (username) => `${endpoint}/account/${username}/delete/`;
+export const accountUpdate = (username) => `${endpoint}/account/${username}/updare/`;
 
 export const commentCreate = `${endpoint}/comments/create/`;
 export const commentUpdate = (id) => `${endpoint}/comments/${id}/updare/`;

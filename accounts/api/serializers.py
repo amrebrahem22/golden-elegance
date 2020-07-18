@@ -4,6 +4,11 @@ from rest_framework.authtoken.models import Token
 from accounts.models import User, Profile
 
 
+def get_posts(qs):
+    from posts.api.serializers import PostSerializer
+    return PostSerializer(qs, many=True).data
+
+
 class FollowersField(serializers.Serializer):
     followers_count = serializers.IntegerField()
 
@@ -23,6 +28,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = '__all__'
+        depth = 3
 
     def get_followers(self, obj):
         return ProfileSerializer(obj.get_followers(), many=True).data
@@ -30,10 +36,14 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class AccountUserDataSerializer(serializers.ModelSerializer):
     profile = ProfileSerializer()
+    posts = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'email', 'username', 'active', 'profile']
+        fields = ['id', 'email', 'username', 'active', 'profile', 'posts']
+
+    def get_posts(self, obj):
+        return get_posts(obj.post_set.all())
 
 
 class ProfileLessDataSerializer(serializers.ModelSerializer):
